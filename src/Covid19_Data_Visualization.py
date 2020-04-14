@@ -33,8 +33,8 @@ class dP:
     customRegionCode = False
     regionCode = [5,9,12,20]                #Regioni
     #regionCode = [121]                      #Provincie
-    #typeRegion = 'denominazione_regione'   #Regioni
-    typeRegion = 'denominazione_provincia'  #Provincie
+    typeRegion = 'denominazione_regione'   #Regioni
+    #typeRegion = 'denominazione_provincia'  #Provincie
     norm = False
     addTotal = False
     yscale = "linear"
