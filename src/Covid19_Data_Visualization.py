@@ -6,7 +6,7 @@
 * Covid19 Data Visualization
 *
 * https://github.com/pcm-dpc/COVID-19
-* version: 20200413
+* version: 20200414a
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -26,14 +26,15 @@ import matplotlib.pyplot as plt
 ''' main '''
 #********************************************
 class dP:
-    saveAsTxt = False
-    saveFormatClass = False
     #categ = 'totale_positivi'
-    categ = 'nuovi_positivi'
-    categ = 'deceduti'
-    #categ = 'totale_casi'
+    #categ = 'nuovi_positivi'
+    #categ = 'deceduti'
+    categ = 'totale_casi'
     customRegionCode = False
-    regionCode = [5,9,12,20]
+    regionCode = [5,9,12,20]                #Regioni
+    #regionCode = [121]                      #Province
+    #typeRegion = 'denominazione_regione'   #Regioni
+    typeRegion = 'denominazione_provincia'  #Province
     norm = False
     addTotal = False
     yscale = "linear"
@@ -42,7 +43,7 @@ def main():
     #try:
     print(sys.argv[1])
     dates, headers, R = readDataFiles(sys.argv[1])
-    processData(dates, headers, R, dP.categ)
+    processData(dates, headers, R)
 
     #except:
     #    usage()
@@ -56,11 +57,10 @@ def readDataFiles(folder):
     R = {}
     dates = []
     for file in glob.glob(folder+'/*.csv'):
-        print(file)
+        #print(file)
         date = os.path.splitext(file)[0][-8:]
-        if date.isalnum():
+        if date.isnumeric():
             dates.append(date)
-            print("Date:",date)
             R[date] = pd.read_csv(file)
             #print(R[date])
             #print(R[date].loc[16, 'tamponi'])
@@ -73,7 +73,7 @@ def readDataFiles(folder):
 #**********************************************
 ''' Process data '''
 #**********************************************
-def processData(dates, headers, R, categ):
+def processData(dates, headers, R):
     print(dates)
     print(headers)
     #print(R[date].loc[16, 'tamponi'])
@@ -87,7 +87,7 @@ def processData(dates, headers, R, categ):
     for i in regionCode:
         A = []
         for date in dates:
-            A.append(R[date].loc[i, categ])
+            A.append(R[date].loc[i, dP.categ])
         if dP.norm:
             A = A/max(A)
         if dP.addTotal:
@@ -95,14 +95,14 @@ def processData(dates, headers, R, categ):
                 totA = np.add(totA, A)
             except:
                 totA = A
-        plt.plot(dates, A, label=R[date].loc[i, 'denominazione_regione'])
+        plt.plot(dates, A, label=R[date].loc[i, dP.typeRegion])
     
     if dP.addTotal:
         if dP.norm:
             totA = totA/max(totA)
         print(totA)
         plt.plot(dates, totA, label='Totale')
-    plt.title(categ)
+    plt.title(dP.categ)
     plt.xticks(rotation=45)
     plt.yscale(dP.yscale)
     plt.legend()
@@ -114,7 +114,7 @@ def processData(dates, headers, R, categ):
 #************************************
 def usage():
     print('\n Usage:\n')
-    print('  python3 RruffDataMaker.py <learnfile> <enInitial> <enFinal> <enStep> <threshold> \n')
+    print('  python3 Covid19_Data_Visualization.py <folder with data> \n')
     print(' Requires python 3.x. Not compatible with python 2.x\n')
 
 #************************************
