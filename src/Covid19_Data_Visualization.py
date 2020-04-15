@@ -6,7 +6,7 @@
 * Covid19 Data Visualization
 *
 * https://github.com/pcm-dpc/COVID-19
-* version: 20200415b
+* version: 20200415c
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -32,22 +32,31 @@ class dP:
     categ = 'totale_casi'
     customRegionCode = False
     regionCode = [5,9,12,20]                #Regioni
-    #regionCode = [121]                      #Provincie
+    #regionCode = [121]                      #Province
     typeRegion = 'denominazione_regione'   #Regioni
-    #typeRegion = 'denominazione_provincia'  #Provincie
+    #typeRegion = 'denominazione_provincia'  #Province
     norm = False
     addTotal = False
-    yscale = "linear"
+    yscale = "log"
 
 def main():
     #try:
     print(sys.argv[1])
     folder_regione = sys.argv[1] + '/dati-regioni'
-    folder_provincie = sys.argv[1] + '/dati-province'
+    folder_province = sys.argv[1] + '/dati-province'
     #dates, headers, R = readDataFiles(sys.argv[1])
     #processData(dates, headers, R, dP.categ, dP.customRegionCode, dP.regionCode, dP.typeRegion, dP.norm, dP.addTotal, dP.yscale)
-    processData(folder_regione, 'totale_positivi', False, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
-    processData(folder_provincie, 'totale_casi', True, [5,9,12,20], 'denominazione_provincia', False, False, 'linear')
+    processData(folder_regione, 'totale_positivi', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'nuovi_positivi', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, 'linear')
+    processData(folder_regione, 'variazione_totale_positivi', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, 'linear')
+    processData(folder_regione, 'deceduti', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'terapia_intensiva', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'ricoverati_con_sintomi', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'totale_ospedalizzati', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'isolamento_domiciliare', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'dimessi_guariti', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_regione, 'tamponi', True, [5,9,12,20], 'denominazione_regione', dP.norm, dP.addTotal, dP.yscale)
+    processData(folder_province, 'totale_casi', True, [121], 'denominazione_provincia', dP.norm, dP.addTotal, dP.yscale)
     
     #except:
     #    usage()
@@ -83,7 +92,7 @@ def processData(folder, categ, customRegionCode, regionCode, typeRegion, norm, a
     print(headers)
     #print(R[date].loc[16, 'tamponi'])
     #print(R[date].iloc[16, 3])
-    if not dP.customRegionCode:
+    if not customRegionCode:
         regionCode = R[dates[0]].index.tolist()
     
     totA = []
@@ -112,7 +121,7 @@ def processData(folder, categ, customRegionCode, regionCode, typeRegion, norm, a
     plt.show()
     #plt.savefig(dates[-1] + '_summary.pdf', dpi = 640, format = 'pdf')  # Save plot
     plt.close()
-    
+
 #************************************
 ''' Lists the program usage '''
 #************************************
