@@ -6,7 +6,7 @@
 * Covid19 Data Visualization
 *
 * https://github.com/pcm-dpc/COVID-19
-* version: 20200415a
+* version: 20200415b
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -42,10 +42,12 @@ class dP:
 def main():
     #try:
     print(sys.argv[1])
-    dates, headers, R = readDataFiles(sys.argv[1])
+    folder_regione = sys.argv[1] + '/dati-regioni'
+    folder_provincie = sys.argv[1] + '/dati-province'
+    #dates, headers, R = readDataFiles(sys.argv[1])
     #processData(dates, headers, R, dP.categ, dP.customRegionCode, dP.regionCode, dP.typeRegion, dP.norm, dP.addTotal, dP.yscale)
-    processData(dates, headers, R, 'totale_casi', False, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
-    processData(dates, headers, R, 'totale_casi', True, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
+    processData(folder_regione, 'totale_positivi', False, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
+    processData(folder_provincie, 'totale_casi', True, [5,9,12,20], 'denominazione_provincia', False, False, 'linear')
     
     #except:
     #    usage()
@@ -75,7 +77,8 @@ def readDataFiles(folder):
 #**********************************************
 ''' Process data '''
 #**********************************************
-def processData(dates, headers, R, categ, customRegionCode, regionCode, typeRegion, norm, addTotal, yscale):
+def processData(folder, categ, customRegionCode, regionCode, typeRegion, norm, addTotal, yscale):
+    dates, headers, R = readDataFiles(folder)
     print(dates)
     print(headers)
     #print(R[date].loc[16, 'tamponi'])
