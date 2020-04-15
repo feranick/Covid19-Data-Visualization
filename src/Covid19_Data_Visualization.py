@@ -6,7 +6,7 @@
 * Covid19 Data Visualization
 *
 * https://github.com/pcm-dpc/COVID-19
-* version: 20200414a
+* version: 20200415a
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -43,8 +43,10 @@ def main():
     #try:
     print(sys.argv[1])
     dates, headers, R = readDataFiles(sys.argv[1])
-    processData(dates, headers, R)
-
+    #processData(dates, headers, R, dP.categ, dP.customRegionCode, dP.regionCode, dP.typeRegion, dP.norm, dP.addTotal, dP.yscale)
+    processData(dates, headers, R, 'totale_casi', False, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
+    processData(dates, headers, R, 'totale_casi', True, [5,9,12,20], 'denominazione_regione', False, False, 'linear')
+    
     #except:
     #    usage()
     #    sys.exit(2)
@@ -73,40 +75,39 @@ def readDataFiles(folder):
 #**********************************************
 ''' Process data '''
 #**********************************************
-def processData(dates, headers, R):
+def processData(dates, headers, R, categ, customRegionCode, regionCode, typeRegion, norm, addTotal, yscale):
     print(dates)
     print(headers)
     #print(R[date].loc[16, 'tamponi'])
     #print(R[date].iloc[16, 3])
-    if dP.customRegionCode:
-        regionCode = dP.regionCode
-    else:
+    if not dP.customRegionCode:
         regionCode = R[dates[0]].index.tolist()
     
     totA = []
     for i in regionCode:
         A = []
         for date in dates:
-            A.append(R[date].loc[i, dP.categ])
-        if dP.norm:
+            A.append(R[date].loc[i, categ])
+        if norm:
             A = A/max(A)
-        if dP.addTotal:
+        if addTotal:
             try:
                 totA = np.add(totA, A)
             except:
                 totA = A
-        plt.plot(dates, A, label=R[date].loc[i, dP.typeRegion])
+        plt.plot(dates, A, label=R[date].loc[i, typeRegion])
     
-    if dP.addTotal:
-        if dP.norm:
+    if addTotal:
+        if norm:
             totA = totA/max(totA)
         print(totA)
         plt.plot(dates, totA, label='Totale')
-    plt.title(dP.categ)
+    plt.title(categ)
     plt.xticks(rotation=45)
-    plt.yscale(dP.yscale)
+    plt.yscale(yscale)
     plt.legend()
     plt.show()
+    #plt.savefig(dates[-1] + '_summary.pdf', dpi = 640, format = 'pdf')  # Save plot
     plt.close()
     
 #************************************
